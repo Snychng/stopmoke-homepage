@@ -304,13 +304,6 @@ summary::-webkit-details-marker {
   max-width: 976px;
   height: 660px;
   margin: 62px auto 0;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.96) 0 18%, rgba(255, 255, 255, 0) 54%),
-    #f8f8f7;
-  box-shadow: 0 18px 60px rgba(10, 10, 10, 0.05);
 }
 
 .showcase-phone {
@@ -1040,7 +1033,6 @@ footer {
     width: calc(100% - 24px);
     height: 590px;
     margin-top: 48px;
-    border-radius: 20px;
   }
 
   .showcase-phone {
