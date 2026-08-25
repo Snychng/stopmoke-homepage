@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Mesh, Program, Renderer, Triangle, Vec2 } from 'ogl'
 
-// 渲染结构沿用 React Bits DarkVeil，片元着色器改为 Stopmoke 的低对比烟雾。
+// 渲染结构沿用 React Bits DarkVeil，片元着色器改为浅色页面上的低对比烟雾。
 // https://reactbits.dev/backgrounds/dark-veil
 const vertex = `
 attribute vec2 position;
@@ -65,12 +65,12 @@ void main() {
 
   float edgeFade = 1.0 - smoothstep(0.22, 1.42, length(uv * vec2(0.72, 0.94)));
   float lowerFade = smoothstep(-0.82, 0.28, uv.y);
-  float alpha = density * edgeFade * mix(0.62, 1.0, lowerFade) * 0.72;
+  float alpha = density * edgeFade * mix(0.62, 1.0, lowerFade) * 0.22;
 
-  vec3 charcoal = vec3(0.42, 0.40, 0.37);
-  vec3 ember = vec3(0.54, 0.28, 0.16);
-  float warmth = smoothstep(0.62, 0.92, density + uv.x * 0.08);
-  vec3 color = mix(charcoal, ember, warmth * 0.34);
+  vec3 graphite = vec3(0.46);
+  vec3 mist = vec3(0.70);
+  float lift = smoothstep(0.58, 0.92, density + uv.x * 0.08);
+  vec3 color = mix(mist, graphite, lift * 0.45);
 
   gl_FragColor = vec4(color, alpha);
 }

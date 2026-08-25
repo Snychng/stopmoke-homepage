@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
   ArrowDown,
   ArrowRight,
@@ -13,20 +13,44 @@ import SmokeVeil from './components/SmokeVeil'
 
 const navItems = [
   { label: '产品', href: '#product' },
-  { label: '记录', href: '#record' },
+  { label: '方法', href: '#method' },
+  { label: '数据', href: '#record' },
   { label: '隐私', href: '#privacy' },
   { label: '常见问题', href: '#questions' },
 ]
 
+const modes = [
+  {
+    id: 'today',
+    label: '今天',
+    title: '先看当下这一刻。',
+    copy: '距上次抽烟多久、今天忍住几次、少花了多少钱，都在打开应用后的第一屏。',
+    image: '/images/home.png',
+    alt: 'Stopmoke 今天页面',
+  },
+  {
+    id: 'stats',
+    label: '统计',
+    title: '把变化放回更长的时间里。',
+    copy: '用周、月和时段分布理解习惯，不拿一次失手给整个过程下结论。',
+    image: '/images/stats.png',
+    alt: 'Stopmoke 统计页面',
+  },
+  {
+    id: 'history',
+    label: '回看',
+    title: '已经发生的，值得看清楚。',
+    copy: '数量、花费和累计时间来自真实记录，随历史修正一起重新计算。',
+    image: '/images/reveal.png',
+    alt: 'Stopmoke 历史换算页面',
+  },
+]
+
 function Brand() {
   return (
-    <a href="#top" className="group flex items-center gap-3" aria-label="返回 Stopmoke 首页">
-      <img
-        src="/images/stopmoke-icon.png"
-        alt=""
-        className="size-8 rounded-[7px] border border-white/10"
-      />
-      <span className="text-[15px] font-semibold tracking-[0.08em] text-stone-100">STOPMOKE</span>
+    <a href="#top" className="brand" aria-label="返回 Stopmoke 首页">
+      <span className="brand-mark" aria-hidden="true"><span /><span /></span>
+      <span>Stopmoke</span>
     </a>
   )
 }
@@ -42,258 +66,231 @@ function Header() {
   }, [open])
 
   return (
-    <header className="absolute inset-x-0 top-0 z-20 border-b border-white/10">
-      <div className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-5 md:px-10 xl:px-14">
+    <header className="site-header">
+      <nav className="site-nav" aria-label="主导航">
         <Brand />
-        <nav className="hidden items-center gap-8 md:flex" aria-label="主导航">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="text-sm text-stone-400 transition-colors duration-300 hover:text-stone-100"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-        <a
-          href="#availability"
-          className="hidden items-center gap-2 border border-white/20 px-4 py-2 text-sm text-stone-100 transition-all duration-300 hover:border-white/40 hover:bg-white/5 active:scale-[0.98] md:flex"
-        >
-          上架进度
-          <ArrowRight size={16} weight="regular" />
-        </a>
-        <button
-          type="button"
-          className="grid size-10 place-items-center border border-white/15 text-stone-100 transition-colors hover:bg-white/5 active:scale-[0.98] md:hidden"
-          onClick={() => setOpen((value) => !value)}
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-          aria-label={open ? '关闭导航' : '打开导航'}
-        >
-          {open ? <X size={20} /> : <List size={20} />}
-        </button>
-      </div>
+        <div className="nav-links">
+          {navItems.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+        </div>
+        <div className="nav-actions">
+          <a className="button button-outline nav-secondary" href="#availability">了解进度</a>
+          <a className="button button-dark nav-primary" href="#product">查看产品<ArrowDown size={15} /></a>
+          <button
+            type="button"
+            className="menu-button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            aria-label={open ? '关闭导航' : '打开导航'}
+          >
+            {open ? <X size={20} /> : <List size={20} />}
+          </button>
+        </div>
+      </nav>
       {open && (
-        <nav
-          id="mobile-navigation"
-          className="border-t border-white/10 bg-[#151515]/95 px-5 py-5 backdrop-blur-xl md:hidden"
-          aria-label="移动端导航"
-        >
+        <nav id="mobile-navigation" className="mobile-navigation" aria-label="移动端导航">
           {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-between border-b border-white/10 py-4 text-sm text-stone-200 last:border-0"
-            >
-              {item.label}
-              <ArrowRight size={16} />
+            <a key={item.href} href={item.href} onClick={() => setOpen(false)}>
+              {item.label}<ArrowRight size={16} />
             </a>
           ))}
+          <a href="#availability" onClick={() => setOpen(false)}>上架进度<ArrowRight size={16} /></a>
         </nav>
       )}
     </header>
   )
 }
 
-function PhoneShot({
-  src,
-  alt,
-  className = '',
-}: {
-  src: string
-  alt: string
-  className?: string
-}) {
+function HeroProductStage() {
   return (
-    <div className={`phone-shell ${className}`}>
-      <img src={src} alt={alt} className="block h-auto w-full" />
+    <div className="product-stage" role="group" aria-label="Stopmoke 产品界面预览">
+      <div className="stage-toolbar">
+        <div className="window-controls" aria-hidden="true"><span /><span /><span /></div>
+        <div className="stage-title"><span className="stage-title-dot" />今日记录</div>
+        <span className="stage-status">本地已保存</span>
+      </div>
+      <div className="stage-body">
+        <aside className="stage-sidebar" aria-hidden="true">
+          <div className="stage-search">搜索记录</div>
+          {[
+            ['今天', '3 次忍住'],
+            ['本周', '少抽 11 根'],
+            ['趋势', '较上周 -18%'],
+            ['时段', '晚间最集中'],
+          ].map(([title, meta], index) => (
+            <div className={`stage-nav-row ${index === 0 ? 'is-active' : ''}`} key={title}>
+              <span className="stage-nav-icon">{index + 1}</span>
+              <span><strong>{title}</strong><small>{meta}</small></span>
+            </div>
+          ))}
+          <div className="stage-profile">
+            <span>S</span>
+            <div><strong>Stopmoke</strong><small>数据保存在本地</small></div>
+          </div>
+        </aside>
+        <div className="stage-workspace">
+          <div className="stage-metric stage-metric-left">
+            <span>距上次抽烟</span><strong>03:46:35</strong><small>时间仍在继续</small>
+          </div>
+          <div className="stage-phone phone-shell">
+            <img src="/images/home.png" alt="Stopmoke 主屏显示距上次抽烟时间和今日记录" />
+          </div>
+          <div className="stage-metric stage-metric-right">
+            <span>本周变化</span><strong>-18%</strong><small>比上周少 11 根</small>
+          </div>
+          <div className="stage-compose" aria-hidden="true">
+            <span className="compose-plus">+</span><span>记录刚刚发生的选择</span><span className="compose-action">记下</span>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
 
 function Hero() {
   return (
-    <section id="top" className="hero relative isolate overflow-hidden bg-[#151515] text-stone-100">
-      <div className="smoke-field pointer-events-none absolute inset-0" aria-hidden="true">
-        <SmokeVeil />
-      </div>
+    <section id="top" className="hero-section">
+      <div className="smoke-field" aria-hidden="true"><SmokeVeil /></div>
       <Header />
-      <div className="relative z-10 mx-auto grid min-h-[760px] max-w-[1400px] grid-cols-1 items-center px-5 pb-12 pt-32 md:min-h-[820px] md:grid-cols-[1.05fr_0.95fr] md:px-10 md:pb-16 md:pt-28 xl:px-14">
-        <div className="relative z-10 max-w-[680px] self-center">
-          <p className="reveal-item mb-7 flex items-center gap-3 text-xs font-medium tracking-[0.16em] text-stone-400 uppercase">
-            <span className="h-px w-8 bg-[#d86d39]" />
-            戒烟与减量记录
-          </p>
-          <h1 className="reveal-item max-w-[13ch] text-[clamp(3rem,7vw,6.6rem)] leading-[0.95] font-[520] text-balance">
-            把每一次忍住，<span className="text-stone-500">留得更久。</span>
-          </h1>
-          <p className="reveal-item mt-8 max-w-[34rem] text-base leading-8 text-stone-400 md:text-lg">
-            Stopmoke 记录你与烟的每一次对抗，把坚持的时间、少花的钱和真实趋势，放在同一块屏幕上。
-          </p>
-          <div className="reveal-item mt-10 flex flex-wrap items-center gap-4">
-            <a
-              href="#product"
-              className="inline-flex h-12 items-center gap-3 bg-stone-100 px-5 text-sm font-medium text-[#171717] transition-all duration-300 hover:bg-white active:translate-y-px"
-            >
-              看看它怎么工作
-              <ArrowDown size={17} />
-            </a>
-            <span className="text-xs tracking-[0.06em] text-stone-500">iOS 优先 · 上架准备中</span>
-          </div>
+      <div className="hero-copy">
+        <a className="announcement" href="#availability">
+          <span>EARLY ACCESS</span><strong>Stopmoke 正在准备</strong><i>·</i><em>查看进度</em><b>↗</b>
+        </a>
+        <h1>Meet <span className="hero-mark" aria-hidden="true"><span /><span /></span> Stopmoke</h1>
+        <p>
+          记录每一次忍住与抽烟，看见坚持多久、少花多少钱，<br />
+          再从真实趋势理解变化，不把一次失手当作结论。
+        </p>
+        <div className="hero-actions">
+          <a className="button button-dark button-large" href="#product">查看产品<ArrowDown size={17} /></a>
+          <a className="button button-muted button-large" href="#method">它如何工作</a>
         </div>
+      </div>
+      <HeroProductStage />
+    </section>
+  )
+}
 
-        <div className="hero-visual relative mt-12 min-h-[500px] md:mt-0 md:min-h-[700px]">
-          <div className="hero-rule absolute top-[12%] right-[4%] h-px w-[66%] bg-white/15" />
-          <div className="absolute top-[15%] right-[2%] hidden text-right md:block">
-            <p className="font-mono text-[10px] tracking-[0.14em] text-stone-500">SINCE LAST SMOKE</p>
-            <p className="mt-2 font-mono text-xs text-stone-300">03 : 46 : 35</p>
-          </div>
-          <PhoneShot
-            src="/images/home.png"
-            alt="Stopmoke 主屏显示距上次抽烟时间、累计坚持和少花金额"
-            className="hero-phone absolute top-[5%] left-1/2 w-[262px] md:top-[12%] md:left-[48%] md:w-[330px] xl:w-[360px]"
-          />
-          <div className="absolute right-[4%] bottom-[8%] hidden w-32 border-t border-[#d86d39]/70 pt-3 md:block">
-            <p className="text-xs leading-5 text-stone-500">今天先少一根，时间就会继续走。</p>
-          </div>
+function Principle() {
+  return (
+    <section id="method" className="principle-section page-section">
+      <div className="principle-panel">
+        <div className="principle-copy">
+          <h2>像记录时间一样，记录每次抵抗</h2>
+          <p>想抽但没有抽，是戒烟过程中真实发生的一件事。Stopmoke 把它和抽烟记录放在一起，让变化来自事实，而不是口号。</p>
         </div>
+        <div className="principle-orbit" aria-hidden="true"><span /><span /></div>
       </div>
     </section>
   )
 }
 
-function Manifesto() {
+function FeatureCard({ title, copy, children, className = '' }: { title: string; copy: string; children: ReactNode; className?: string }) {
   return (
-    <section id="product" className="bg-[#efede8] text-[#1c1b19]">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-12 px-5 py-24 md:grid-cols-[0.8fr_1.2fr] md:px-10 md:py-36 xl:px-14">
-        <p className="section-kicker">01 / 产品立场</p>
-        <div>
-          <h2 className="max-w-[17ch] text-4xl leading-[1.06] font-[520] md:text-6xl">
-            不是给抽烟做打卡，是给抵抗留一条记录。
-          </h2>
-          <div className="mt-10 grid grid-cols-1 gap-8 border-t border-[#1c1b19]/15 pt-8 md:grid-cols-2">
-            <p className="text-base leading-8 text-stone-600">
-              “忍住了”和“抽了一根”同样重要。你不只在失手时打开应用，也能在想抽但没有抽的时候，给自己一个明确的动作。
-            </p>
-            <p className="text-base leading-8 text-stone-600">
-              没有积分、排名或口号。只留下时间、金钱和趋势，让变化自己说话。
-            </p>
+    <article className={`feature-card ${className}`}>
+      <div className="feature-card-copy"><h3>{title}</h3><p>{copy}</p></div>
+      <div className="feature-art">{children}</div>
+    </article>
+  )
+}
+
+function Features() {
+  return (
+    <section id="product" className="features-section page-section">
+      <div className="section-heading centered-heading">
+        <h2>把长期变化，拆成每一次选择</h2>
+        <p>打开、记录、继续生活。Stopmoke 把所有计算留在后台，只把当下需要知道的放在眼前。</p>
+      </div>
+      <div className="feature-grid">
+        <FeatureCard title="忍住了，也值得记下来" copy="不只记录抽烟。每一次主动抵抗都会进入同一条时间线。">
+          <div className="choice-demo">
+            <div className="choice-demo-header"><span>刚刚发生了什么？</span><small>18:42</small></div>
+            <button type="button"><Check size={19} weight="bold" />忍住了</button>
+            <button type="button" className="choice-secondary">抽了一根</button>
+            <p>记录先保存在设备里</p>
           </div>
-        </div>
+        </FeatureCard>
+        <FeatureCard title="趋势比某一天更诚实" copy="按周、月和时段看变化，不让一次波动盖住整个过程。">
+          <img className="feature-phone" src="/images/stats.png" alt="Stopmoke 周趋势与时段统计" />
+        </FeatureCard>
+        <FeatureCard title="代价换成熟悉的单位" copy="数量、花费和累计时间，都从真实历史记录重新计算。">
+          <img className="feature-phone" src="/images/reveal.png" alt="Stopmoke 数量、花费和时间换算" />
+        </FeatureCard>
+        <FeatureCard title="断网也照常记录" copy="操作先完成，再异步同步。网络不会挡在一次记录前面。" className="privacy-card">
+          <div className="sync-demo">
+            <span className="sync-ring"><LockKey size={26} /></span>
+            <div><strong>保存在这台设备</strong><small>云端副本将在联网后更新</small></div>
+            <span className="sync-status"><Check size={15} weight="bold" /> 已保存</span>
+          </div>
+        </FeatureCard>
       </div>
     </section>
   )
 }
 
-function TimeSection() {
+function RecordModes() {
+  const [activeId, setActiveId] = useState(modes[0].id)
+  const active = modes.find((mode) => mode.id === activeId) ?? modes[0]
+
   return (
-    <section id="record" className="overflow-hidden bg-[#f7f6f2] text-[#1c1b19]">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-16 px-5 py-24 md:grid-cols-[1.1fr_0.9fr] md:px-10 md:py-32 xl:px-14">
-        <div className="relative min-h-[620px] md:min-h-[760px]">
-          <div className="absolute inset-y-0 left-0 w-[72%] bg-[#252321]" />
-          <PhoneShot
-            src="/images/stats.png"
-            alt="Stopmoke 统计页展示每周趋势、时间分布和记录热力图"
-            className="absolute top-1/2 right-0 w-[270px] -translate-y-1/2 md:right-[7%] md:w-[340px]"
-          />
-          <div className="absolute bottom-[6%] left-[5%] hidden max-w-44 border-l border-[#d86d39] pl-4 md:block">
-            <p className="text-xs leading-5 text-stone-400">按周和月看变化，不拿单日波动给自己下结论。</p>
-          </div>
-        </div>
-        <div className="md:pl-6">
-          <p className="section-kicker">02 / 看见变化</p>
-          <h2 className="mt-7 max-w-[12ch] text-4xl leading-[1.05] font-[520] md:text-6xl">趋势比某一天更诚实。</h2>
-          <p className="mt-8 max-w-[34rem] text-base leading-8 text-stone-600">
-            每周抽了多少、在哪些时段更容易点烟、比上一周少了几根，都从你的记录里直接算出来。
-          </p>
-          <ul className="mt-10 divide-y divide-[#1c1b19]/10 border-y border-[#1c1b19]/10">
-            {[
-              ['周与月', '把变化放回更长的时间里看'],
-              ['时段分布', '找出最容易被烟牵着走的时刻'],
-              ['混合记录', '同一条时间线看见抽烟与忍住'],
-            ].map(([title, copy]) => (
-              <li key={title} className="grid grid-cols-[8rem_1fr] gap-4 py-5 text-sm">
-                <span className="font-medium text-stone-900">{title}</span>
-                <span className="leading-6 text-stone-600">{copy}</span>
-              </li>
-            ))}
+    <section id="record" className="record-section page-section">
+      <div className="section-heading centered-heading">
+        <h2>同一份记录，三种看法</h2>
+        <p>今天解决当下，统计解释趋势，回看帮助你修正已经发生的记录。</p>
+      </div>
+      <div className="mode-switch" role="tablist" aria-label="产品页面预览">
+        {modes.map((mode) => (
+          <button key={mode.id} type="button" role="tab" aria-selected={active.id === mode.id} onClick={() => setActiveId(mode.id)}>
+            {mode.label}
+          </button>
+        ))}
+      </div>
+      <div className="mode-panel">
+        <div className="mode-copy">
+          <span>STOPMOKE / {active.label}</span>
+          <h3>{active.title}</h3>
+          <p>{active.copy}</p>
+          <ul>
+            <li><Check size={17} weight="bold" />无需等待网络</li>
+            <li><Check size={17} weight="bold" />历史记录可以纠正</li>
+            <li><Check size={17} weight="bold" />所有统计来自真实事件</li>
           </ul>
         </div>
+        <div className="mode-device phone-shell" key={active.id}><img src={active.image} alt={active.alt} /></div>
       </div>
     </section>
   )
 }
 
-function ConsequenceSection() {
-  return (
-    <section className="bg-[#201f1d] text-stone-100">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-16 px-5 py-24 md:grid-cols-[0.8fr_1.2fr] md:px-10 md:py-32 xl:px-14">
-        <div>
-          <p className="section-kicker section-kicker-dark">03 / 换算代价</p>
-          <h2 className="mt-7 max-w-[12ch] text-4xl leading-[1.05] font-[520] md:text-6xl">抽象的代价，换成你熟悉的单位。</h2>
-          <p className="mt-8 max-w-[34rem] text-base leading-8 text-stone-400">
-            钱、时间和累计坚持来自同一份事件记录。数字会跟着真实历史重算，不用夸张的预测替你制造焦虑。
-          </p>
-          <div className="mt-10 flex items-center gap-3 border-t border-white/10 pt-6 text-sm text-stone-400">
-            <ClockCounterClockwise size={20} className="text-[#d86d39]" />
-            每一条记录都可以回看和纠正
-          </div>
-        </div>
-        <div className="relative min-h-[620px] md:min-h-[760px]">
-          <div className="absolute top-[8%] right-0 h-[84%] w-[76%] border border-white/10" />
-          <PhoneShot
-            src="/images/reveal.png"
-            alt="Stopmoke 把过往抽烟换算成数量、金钱与寿命时间"
-            className="absolute top-1/2 left-[7%] w-[270px] -translate-y-1/2 md:w-[340px]"
-          />
-          <p className="absolute right-[4%] bottom-[11%] hidden max-w-[13rem] text-sm leading-7 text-stone-500 md:block">
-            先看清已经发生的，再决定下一根要不要点。
-          </p>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function PrivacySection() {
-  const points = [
-    {
-      icon: LockKey,
-      title: '本地先记',
-      copy: '设备里保留完整记录，断网也能正常使用。',
-    },
-    {
-      icon: ClockCounterClockwise,
-      title: '异步同步',
-      copy: '云端副本用于换设备和重装找回，不让界面等网络。',
-    },
-    {
-      icon: ChartBar,
-      title: '只算事实',
-      copy: '统计从事件记录实时演算，不预设你应该成为谁。',
-    },
+function Privacy() {
+  const items = [
+    { icon: LockKey, title: '本地先记', copy: '完整记录先进入设备，断网时也能继续使用。' },
+    { icon: ClockCounterClockwise, title: '异步同步', copy: '云端副本用于换设备和重装找回，不让界面等待网络。' },
+    { icon: ChartBar, title: '只算事实', copy: '趋势从事件记录实时演算，不预设你应该成为谁。' },
   ]
 
   return (
-    <section id="privacy" className="bg-[#efede8] text-[#1c1b19]">
-      <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32 xl:px-14">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-[0.75fr_1.25fr]">
-          <p className="section-kicker">04 / 数据与隐私</p>
-          <div>
-            <h2 className="max-w-[16ch] text-4xl leading-[1.06] font-[520] md:text-6xl">记录属于你，网络只是备份路径。</h2>
-            <div className="mt-12 divide-y divide-[#1c1b19]/15 border-y border-[#1c1b19]/15">
-              {points.map(({ icon: Icon, title, copy }) => (
-                <div key={title} className="grid grid-cols-[3rem_1fr] gap-5 py-7 md:grid-cols-[4rem_0.42fr_0.58fr] md:items-center">
-                  <Icon size={23} className="mt-0.5 text-[#b65b32] md:mt-0" />
-                  <h3 className="text-lg font-medium">{title}</h3>
-                  <p className="col-start-2 text-sm leading-7 text-stone-600 md:col-start-auto">{copy}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+    <section id="privacy" className="privacy-section page-section">
+      <div className="section-heading centered-heading"><h2>记录属于你</h2><p>网络只是备份路径。日常记录和统计不依赖持续在线。</p></div>
+      <div className="privacy-grid">
+        {items.map(({ icon: Icon, title, copy }) => (
+          <article key={title}><span className="privacy-icon"><Icon size={22} /></span><h3>{title}</h3><p>{copy}</p></article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function Availability() {
+  return (
+    <section id="availability" className="availability-section page-section">
+      <div className="section-heading centered-heading">
+        <h2>下载 Stopmoke</h2>
+        <p>iOS 版本正在完成上架前准备。正式下载地址会在审核通过后更新。</p>
+      </div>
+      <div className="availability-actions">
+        <span className="button button-dark button-large is-disabled"><Check size={17} weight="bold" />iOS 上架准备中</span>
+        <a className="button button-muted button-large" href="#questions">查看常见问题</a>
       </div>
     </section>
   )
@@ -301,35 +298,20 @@ function PrivacySection() {
 
 function Questions() {
   const items = [
-    {
-      question: 'Stopmoke 是抽烟打卡工具吗？',
-      answer: '不是。它是一款戒烟与减量辅助工具。“忍住了”与“抽了一根”具有同等地位，重点是记录对抗过程和长期变化。',
-    },
-    {
-      question: '没有网络还能用吗？',
-      answer: '可以。记录先写入设备本地，联网后再异步同步云端副本。日常操作不会等待网络。',
-    },
-    {
-      question: '现在可以下载吗？',
-      answer: '客户端仍在完成上架前准备。官网会在可公开下载后更新正式入口，不提供来路不明的安装包。',
-    },
+    { question: 'Stopmoke 是抽烟打卡工具吗？', answer: '不是。它是一款戒烟与减量辅助工具。“忍住了”与“抽了一根”具有同等地位，重点是记录对抗过程和长期变化。' },
+    { question: '没有网络还能用吗？', answer: '可以。记录先写入设备本地，联网后再异步同步云端副本，日常操作不会等待网络。' },
+    { question: '现在可以下载吗？', answer: '客户端仍在完成上架前准备。官网会在可公开下载后更新正式入口，不提供来路不明的安装包。' },
   ]
 
   return (
-    <section id="questions" className="bg-[#f7f6f2] text-[#1c1b19]">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-12 px-5 py-24 md:grid-cols-[0.75fr_1.25fr] md:px-10 md:py-32 xl:px-14">
-        <div>
-          <p className="section-kicker">05 / 常见问题</p>
-          <h2 className="mt-7 text-4xl leading-none font-[520] md:text-5xl">说清楚几件事。</h2>
-        </div>
-        <div className="divide-y divide-[#1c1b19]/15 border-y border-[#1c1b19]/15">
+    <section id="questions" className="questions-section page-section">
+      <div className="questions-layout">
+        <h2>常见问题</h2>
+        <div className="question-list">
           {items.map((item, index) => (
-            <details key={item.question} className="group" open={index === 0}>
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-base font-medium marker:hidden">
-                {item.question}
-                <span className="grid size-8 shrink-0 place-items-center border border-[#1c1b19]/15 text-lg font-light transition-transform duration-300 group-open:rotate-45">+</span>
-              </summary>
-              <p className="max-w-[52rem] pb-7 pr-12 text-sm leading-7 text-stone-600">{item.answer}</p>
+            <details key={item.question} open={index === 0}>
+              <summary>{item.question}<span>+</span></summary>
+              <p>{item.answer}</p>
             </details>
           ))}
         </div>
@@ -338,23 +320,19 @@ function Questions() {
   )
 }
 
-function Availability() {
+function FinalCallout() {
   return (
-    <section id="availability" className="bg-[#d86d39] text-[#181716]">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-12 px-5 py-20 md:grid-cols-[1.35fr_0.65fr] md:items-end md:px-10 md:py-24 xl:px-14">
-        <div>
-          <p className="text-xs font-semibold tracking-[0.16em] uppercase">Release status</p>
-          <h2 className="mt-5 max-w-[14ch] text-4xl leading-[1.02] font-[560] md:text-6xl">先把产品做好，再把下载按钮放出来。</h2>
-        </div>
-        <div className="border-t border-[#1c1b19]/25 pt-6">
-          <div className="flex items-center gap-3 text-sm font-medium">
-            <span className="grid size-6 place-items-center border border-[#1c1b19]/30">
-              <Check size={14} weight="bold" />
-            </span>
-            iOS 版本上架准备中
+    <section className="final-section page-section">
+      <div className="final-panel">
+        <div className="final-copy">
+          <h2>从下一次想抽烟开始</h2>
+          <p>先记下一次真实选择，再让时间给你答案。</p>
+          <div>
+            <a className="button button-dark button-large" href="#top">回到产品预览</a>
+            <a className="button button-outline button-large" href="#availability">查看上架进度</a>
           </div>
-          <p className="mt-4 text-sm leading-7 text-[#1c1b19]/75">正式下载地址会在完成上架后出现在这里。</p>
         </div>
+        <div className="final-mark" aria-hidden="true"><span /><span /></div>
       </div>
     </section>
   )
@@ -362,12 +340,8 @@ function Availability() {
 
 function Footer() {
   return (
-    <footer className="bg-[#151515] text-stone-400">
-      <div className="mx-auto flex max-w-[1400px] flex-col gap-8 px-5 py-10 md:flex-row md:items-center md:justify-between md:px-10 xl:px-14">
-        <Brand />
-        <p className="text-xs leading-6">站在戒烟的一侧，记录每一次真实发生。</p>
-        <p className="font-mono text-[11px] text-stone-400">© 2026 SYNOPAI</p>
-      </div>
+    <footer>
+      <div className="footer-inner"><Brand /><p>站在戒烟的一侧，记录每一次真实发生。</p><span>© 2026 SYNOPAI</span></div>
     </footer>
   )
 }
@@ -376,12 +350,13 @@ export default function App() {
   return (
     <main>
       <Hero />
-      <Manifesto />
-      <TimeSection />
-      <ConsequenceSection />
-      <PrivacySection />
-      <Questions />
+      <Principle />
+      <Features />
+      <RecordModes />
+      <Privacy />
       <Availability />
+      <Questions />
+      <FinalCallout />
       <Footer />
     </main>
   )
