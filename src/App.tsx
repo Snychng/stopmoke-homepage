@@ -49,7 +49,7 @@ const modes = [
 function Brand() {
   return (
     <a href="#top" className="brand" aria-label="返回 Stopmoke 首页">
-      <span className="brand-mark" aria-hidden="true"><span /><span /></span>
+      <img src="/images/stopmoke-icon.png" alt="" className="brand-logo" />
       <span>Stopmoke</span>
     </a>
   )
@@ -101,47 +101,17 @@ function Header() {
   )
 }
 
-function HeroProductStage() {
+function HeroAppShowcase() {
   return (
-    <div className="product-stage" role="group" aria-label="Stopmoke 产品界面预览">
-      <div className="stage-toolbar">
-        <div className="window-controls" aria-hidden="true"><span /><span /><span /></div>
-        <div className="stage-title"><span className="stage-title-dot" />今日记录</div>
-        <span className="stage-status">本地已保存</span>
+    <div className="app-showcase" role="group" aria-label="Stopmoke 手机 App 原型界面预览">
+      <div className="showcase-phone showcase-left phone-shell">
+        <img src="/images/stats.png" alt="Stopmoke 原型统计页面" />
       </div>
-      <div className="stage-body">
-        <aside className="stage-sidebar" aria-hidden="true">
-          <div className="stage-search">搜索记录</div>
-          {[
-            ['今天', '3 次忍住'],
-            ['本周', '少抽 11 根'],
-            ['趋势', '较上周 -18%'],
-            ['时段', '晚间最集中'],
-          ].map(([title, meta], index) => (
-            <div className={`stage-nav-row ${index === 0 ? 'is-active' : ''}`} key={title}>
-              <span className="stage-nav-icon">{index + 1}</span>
-              <span><strong>{title}</strong><small>{meta}</small></span>
-            </div>
-          ))}
-          <div className="stage-profile">
-            <span>S</span>
-            <div><strong>Stopmoke</strong><small>数据保存在本地</small></div>
-          </div>
-        </aside>
-        <div className="stage-workspace">
-          <div className="stage-metric stage-metric-left">
-            <span>距上次抽烟</span><strong>03:46:35</strong><small>时间仍在继续</small>
-          </div>
-          <div className="stage-phone phone-shell">
-            <img src="/images/home.png" alt="Stopmoke 主屏显示距上次抽烟时间和今日记录" />
-          </div>
-          <div className="stage-metric stage-metric-right">
-            <span>本周变化</span><strong>-18%</strong><small>比上周少 11 根</small>
-          </div>
-          <div className="stage-compose" aria-hidden="true">
-            <span className="compose-plus">+</span><span>记录刚刚发生的选择</span><span className="compose-action">记下</span>
-          </div>
-        </div>
+      <div className="showcase-phone showcase-center phone-shell">
+        <img src="/images/home.png" alt="Stopmoke 原型主屏显示距上次抽烟时间和今日记录" />
+      </div>
+      <div className="showcase-phone showcase-right phone-shell">
+        <img src="/images/reveal.png" alt="Stopmoke 原型展示历史抽烟数量、花费和时间换算" />
       </div>
     </div>
   )
@@ -156,7 +126,7 @@ function Hero() {
         <a className="announcement" href="#availability">
           <span>EARLY ACCESS</span><strong>Stopmoke 正在准备</strong><i>·</i><em>查看进度</em><b>↗</b>
         </a>
-        <h1>Meet <span className="hero-mark" aria-hidden="true"><span /><span /></span> Stopmoke</h1>
+        <h1>Meet <img src="/images/stopmoke-icon.png" alt="" className="hero-logo" /> Stopmoke</h1>
         <p>
           记录每一次忍住与抽烟，看见坚持多久、少花多少钱，<br />
           再从真实趋势理解变化，不把一次失手当作结论。
@@ -166,7 +136,7 @@ function Hero() {
           <a className="button button-muted button-large" href="#method">它如何工作</a>
         </div>
       </div>
-      <HeroProductStage />
+      <HeroAppShowcase />
     </section>
   )
 }
@@ -179,7 +149,7 @@ function Principle() {
           <h2>像记录时间一样，记录每次抵抗</h2>
           <p>想抽但没有抽，是戒烟过程中真实发生的一件事。Stopmoke 把它和抽烟记录放在一起，让变化来自事实，而不是口号。</p>
         </div>
-        <div className="principle-orbit" aria-hidden="true"><span /><span /></div>
+        <img className="principle-logo" src="/images/stopmoke-icon.png" alt="" />
       </div>
     </section>
   )
@@ -216,12 +186,8 @@ function Features() {
         <FeatureCard title="代价换成熟悉的单位" copy="数量、花费和累计时间，都从真实历史记录重新计算。">
           <img className="feature-phone" src="/images/reveal.png" alt="Stopmoke 数量、花费和时间换算" />
         </FeatureCard>
-        <FeatureCard title="断网也照常记录" copy="操作先完成，再异步同步。网络不会挡在一次记录前面。" className="privacy-card">
-          <div className="sync-demo">
-            <span className="sync-ring"><LockKey size={26} /></span>
-            <div><strong>保存在这台设备</strong><small>云端副本将在联网后更新</small></div>
-            <span className="sync-status"><Check size={15} weight="bold" /> 已保存</span>
-          </div>
+        <FeatureCard title="记录完成后，再同步到云端" copy="本地数据库先准备好，换设备恢复时再使用云端副本。" className="privacy-card">
+          <img className="feature-phone" src="/images/sync.png" alt="Stopmoke 原型首次同步完成页面" />
         </FeatureCard>
       </div>
     </section>
@@ -332,7 +298,7 @@ function FinalCallout() {
             <a className="button button-outline button-large" href="#availability">查看上架进度</a>
           </div>
         </div>
-        <div className="final-mark" aria-hidden="true"><span /><span /></div>
+        <img className="final-logo" src="/images/stopmoke-icon.png" alt="" />
       </div>
     </section>
   )
