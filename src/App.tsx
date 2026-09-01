@@ -307,7 +307,21 @@ function FinalCallout() {
 function Footer() {
   return (
     <footer>
-      <div className="footer-inner"><Brand /><p>站在戒烟的一侧，记录每一次真实发生。</p><span>© 2026 SYNOPAI</span></div>
+      <div className="footer-inner">
+        <div className="footer-primary">
+          <Brand />
+          <p>站在戒烟的一侧，记录每一次真实发生。</p>
+          <span>© 2026 SYNOPAI</span>
+        </div>
+        <a
+          className="icp-link"
+          href="https://beian.miit.gov.cn/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          浙ICP备2026071162号
+        </a>
+      </div>
     </footer>
   )
 }

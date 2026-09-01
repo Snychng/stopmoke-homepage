@@ -787,20 +787,45 @@ footer {
 
 .footer-inner {
   display: flex;
-  min-height: 112px;
+  min-height: 132px;
   max-width: 1152px;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 32px;
+  justify-content: center;
+  gap: 14px;
   margin: 0 auto;
   padding: 24px;
 }
 
+.footer-primary {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
 .footer-inner p,
-.footer-inner > span {
+.footer-primary > span,
+.icp-link {
   color: #666666;
   font-size: 12px;
   line-height: 20px;
+}
+
+.icp-link {
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.icp-link:hover {
+  color: var(--ink);
+}
+
+.icp-link:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
 @keyframes mode-enter {
@@ -1229,10 +1254,20 @@ footer {
 
   .footer-inner {
     min-height: 150px;
-    flex-direction: column;
     align-items: flex-start;
     gap: 12px;
     padding: 30px 24px;
+  }
+
+  .footer-primary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .icp-link {
+    align-self: center;
+    margin-top: 6px;
   }
 
   .footer-inner .brand > span:last-child {
